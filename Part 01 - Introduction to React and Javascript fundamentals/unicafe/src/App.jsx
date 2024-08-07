@@ -2,19 +2,24 @@ import { useState } from 'react';
 
 const Statistics = ({ good, neutral, bad }) => {
   const totalFeedback = good + neutral + bad;
-  const averageScore = totalFeedback !== 0 ? (good - bad) / totalFeedback : 0;
-  const averagePositive =
-    totalFeedback !== 0 ? (good / totalFeedback) * 100 : 0;
+  const averageScore = (good * 1 + neutral * 0 + bad * -1) / totalFeedback;
+  const averagePositive = (good / totalFeedback) * 100;
 
   return (
     <div>
       <h1>Statistics</h1>
-      <p>Good {good}</p>
-      <p>Neutral {neutral}</p>
-      <p>Bad {bad}</p>
-      <p>All {totalFeedback}</p>
-      <p>Average {averageScore}</p>
-      <p>Positive {averagePositive}%</p>
+      {totalFeedback === 0 ? (
+        <p>No feedback given</p>
+      ) : (
+        <>
+          <p>Good {good}</p>
+          <p>Neutral {neutral}</p>
+          <p>Bad {bad}</p>
+          <p>All {totalFeedback}</p>
+          <p>Average {averageScore}</p>
+          <p>Positive {averagePositive}%</p>
+        </>
+      )}
     </div>
   );
 };
