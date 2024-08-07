@@ -5,9 +5,10 @@ const Button = ({ text, handleClick }) => (
 );
 
 const StatisticLine = ({ text, value }) => (
-  <p>
-    {text} {value}
-  </p>
+  <tr>
+    <td>{text}</td>
+    <td>{value}</td>
+  </tr>
 );
 
 const Statistics = ({ good, neutral, bad }) => {
@@ -16,21 +17,23 @@ const Statistics = ({ good, neutral, bad }) => {
   const averagePositive = (good / totalFeedback) * 100;
 
   return (
-    <div>
+    <>
       <h1>Statistics</h1>
       {totalFeedback === 0 ? (
         <p>No feedback given</p>
       ) : (
-        <>
-          <StatisticLine text='Good' value={good} />
-          <StatisticLine text='Neutral' value={neutral} />
-          <StatisticLine text='Bad' value={bad} />
-          <StatisticLine text='All' value={totalFeedback} />
-          <StatisticLine text='Average' value={averageScore} />
-          <StatisticLine text='Positive' value={averagePositive + ' %'} />
-        </>
+        <table>
+          <tbody>
+            <StatisticLine text='Good' value={good} />
+            <StatisticLine text='Neutral' value={neutral} />
+            <StatisticLine text='Bad' value={bad} />
+            <StatisticLine text='All' value={totalFeedback} />
+            <StatisticLine text='Average' value={averageScore} />
+            <StatisticLine text='Positive' value={averagePositive + ' %'} />
+          </tbody>
+        </table>
       )}
-    </div>
+    </>
   );
 };
 
@@ -41,12 +44,10 @@ const App = () => {
 
   return (
     <>
-      <div>
-        <h1>Give Feedback</h1>
-        <Button text='Good' handleClick={() => setGood(good + 1)} />
-        <Button text='Neutral' handleClick={() => setNeutral(neutral + 1)} />
-        <Button text='Bad' handleClick={() => setBad(bad + 1)} />
-      </div>
+      <h1>Give Feedback</h1>
+      <Button text='Good' handleClick={() => setGood(good + 1)} />
+      <Button text='Neutral' handleClick={() => setNeutral(neutral + 1)} />
+      <Button text='Bad' handleClick={() => setBad(bad + 1)} />
 
       <Statistics good={good} neutral={neutral} bad={bad} />
     </>
