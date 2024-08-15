@@ -22,26 +22,20 @@ const App = () => {
     }
   };
 
-  const handleNewNameChange = (event) => {
-    setNewPerson((prevPerson) => ({ ...prevPerson, name: event.target.value }));
-  };
-
-  const handleNewNumberChange = (event) => {
-    setNewPerson((prevPerson) => ({
-      ...prevPerson,
-      number: event.target.value,
-    }));
-  };
+  const handleInputChange = (event) => {
+    const {name, value} = event.target
+    setNewPerson((prevPerson) => ({ ...prevPerson, [name]: value }));
+  }
 
   return (
     <div>
       <h2>Phonebook</h2>
       <form>
         <div>
-          name: <input onChange={handleNewNameChange} />
+          name: <input name="name" onChange={handleInputChange} />
         </div>
         <div>
-          number: <input onChange={handleNewNumberChange} />
+          number: <input name="number" onChange={handleInputChange} />
         </div>
         <div>
           <button type='submit' onClick={addNewPerson}>
