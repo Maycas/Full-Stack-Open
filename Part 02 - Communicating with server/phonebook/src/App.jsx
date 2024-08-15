@@ -1,12 +1,22 @@
 import { useState } from 'react';
+import _ from 'lodash';
 
 const App = () => {
   const [persons, setPersons] = useState([{ name: 'Arto Hellas' }]);
   const [newName, setNewName] = useState('');
 
+  const isNameInPersons = (newPerson) => {
+    return persons.some((person) => _.isEqual(person, newPerson));
+  };
+
   const addNewPerson = (event) => {
     event.preventDefault();
-    setPersons([...persons, { name: newName }]);
+    const newPerson = { name: newName };
+    if (isNameInPersons(newPerson)) {
+      alert(`${newName} is already added to phonebook`);
+    } else {
+      setPersons((prevPersons) => [...prevPersons, newPerson]);
+    }
   };
 
   const handleNewNameChange = (event) => {
