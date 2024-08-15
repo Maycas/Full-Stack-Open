@@ -2,8 +2,10 @@ import { useState } from 'react';
 import _ from 'lodash';
 
 const App = () => {
-  const [persons, setPersons] = useState([{ name: 'Arto Hellas' }]);
-  const [newName, setNewName] = useState('');
+  const [persons, setPersons] = useState([
+    { name: 'Arto Hellas', number: '040-1234567' },
+  ]);
+  const [newPerson, setNewPerson] = useState({ name: '', number: '' });
 
   const isNameInPersons = (newPerson) => {
     return persons.some((person) => _.isEqual(person, newPerson));
@@ -11,16 +13,24 @@ const App = () => {
 
   const addNewPerson = (event) => {
     event.preventDefault();
-    const newPerson = { name: newName };
     if (isNameInPersons(newPerson)) {
-      alert(`${newName} is already added to phonebook`);
+      alert(
+        `${newPerson.name} (${newPerson.number}) is already added to phonebook`
+      );
     } else {
       setPersons((prevPersons) => [...prevPersons, newPerson]);
     }
   };
 
   const handleNewNameChange = (event) => {
-    setNewName(event.target.value);
+    setNewPerson((prevPerson) => ({ ...prevPerson, name: event.target.value }));
+  };
+
+  const handleNewNumberChange = (event) => {
+    setNewPerson((prevPerson) => ({
+      ...prevPerson,
+      number: event.target.value,
+    }));
   };
 
   return (
@@ -31,6 +41,9 @@ const App = () => {
           name: <input onChange={handleNewNameChange} />
         </div>
         <div>
+          number: <input onChange={handleNewNumberChange} />
+        </div>
+        <div>
           <button type='submit' onClick={addNewPerson}>
             add
           </button>
@@ -38,7 +51,9 @@ const App = () => {
       </form>
       <h2>Numbers</h2>
       {persons.map((person, index) => (
-        <p key={index}>{person.name}</p>
+        <p key={index}>
+          {person.name} {person.number}
+        </p>
       ))}
     </div>
   );
