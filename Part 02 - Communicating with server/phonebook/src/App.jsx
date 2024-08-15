@@ -7,13 +7,11 @@ const App = () => {
   ]);
   const [newPerson, setNewPerson] = useState({ name: '', number: '' });
 
-  const isNameInPersons = (newPerson) => {
-    return persons.some((person) => _.isEqual(person, newPerson));
-  };
-
   const addNewPerson = (event) => {
     event.preventDefault();
-    if (isNameInPersons(newPerson)) {
+
+    const personExists = persons.some((person) => _.isEqual(person, newPerson));
+    if (personExists) {
       alert(
         `${newPerson.name} (${newPerson.number}) is already added to phonebook`
       );
