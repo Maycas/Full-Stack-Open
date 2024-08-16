@@ -1,6 +1,10 @@
 import { useState } from 'react';
 import _ from 'lodash';
 
+import Persons from './components/Persons';
+import Filter from './components/Filter';
+import PersonsForm from './components/PersonsForm';
+
 const App = () => {
   const [persons, setPersons] = useState([
     { name: 'Arto Hellas', number: '040-123456', id: 1 },
@@ -45,29 +49,11 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
-      <div>
-        Search a name: <input name='search' onChange={handleSearchChange} />
-      </div>
+      <Filter onSearchChange={handleSearchChange} />
       <h2>Add New Entry</h2>
-      <form>
-        <div>
-          name: <input name='name' onChange={handleInputChange} />
-        </div>
-        <div>
-          number: <input name='number' onChange={handleInputChange} />
-        </div>
-        <div>
-          <button type='submit' onClick={addNewPerson}>
-            add
-          </button>
-        </div>
-      </form>
+      <PersonsForm onInputChange={handleInputChange} onSubmit={addNewPerson} />
       <h2>Numbers</h2>
-      {filteredPersons.map((person) => (
-        <p key={person.id}>
-          {person.name} {person.number}
-        </p>
-      ))}
+      <Persons persons={filteredPersons} />
     </div>
   );
 };
