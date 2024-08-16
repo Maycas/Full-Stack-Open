@@ -9,6 +9,7 @@ const App = () => {
     { name: 'Mary Poppendieck', number: '39-23-6423122', id: 4 },
   ]);
   const [newPerson, setNewPerson] = useState({ name: '', number: '', id: '' });
+  const [searchQuery, setSearchQuery] = useState('');
 
   const addNewPerson = (event) => {
     event.preventDefault();
@@ -16,6 +17,7 @@ const App = () => {
     const personExists = persons.some((person) =>
       _.isEqual(_.omit(person, ['id']), _.omit(newPerson, ['id']))
     );
+
     if (personExists) {
       alert(
         `${newPerson.name} (${newPerson.number}) is already added to phonebook`
@@ -34,9 +36,19 @@ const App = () => {
     }));
   };
 
+  const handleSearchChange = (event) => setSearchQuery(event.target.value);
+
+  const filteredPersons = persons.filter((person) =>
+    person.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div>
-      <h2>Phonebook</h2>
+      <h1>Phonebook</h1>
+      <div>
+        Search a name: <input name='search' onChange={handleSearchChange} />
+      </div>
+      <h2>Add New Entry</h2>
       <form>
         <div>
           name: <input name='name' onChange={handleInputChange} />
@@ -51,7 +63,7 @@ const App = () => {
         </div>
       </form>
       <h2>Numbers</h2>
-      {persons.map((person) => (
+      {filteredPersons.map((person) => (
         <p key={person.id}>
           {person.name} {person.number}
         </p>
