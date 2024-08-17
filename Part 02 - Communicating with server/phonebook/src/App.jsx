@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import _ from 'lodash';
-import axios from 'axios';
+import PersonsService from './services/persons';
 
 import Persons from './components/Persons';
 import Filter from './components/Filter';
@@ -8,13 +8,11 @@ import PersonsForm from './components/PersonsForm';
 
 const App = () => {
   const [persons, setPersons] = useState([]);
-  const [newPerson, setNewPerson] = useState({ name: '', number: '', id: '' });
+  const [newPerson, setNewPerson] = useState({ name: '', number: '' });
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then((response) => setPersons(response.data));
+    PersonsService.getAll().then((personsList) => setPersons(personsList));
   }, []);
 
   const addNewPerson = (event) => {
@@ -29,7 +27,9 @@ const App = () => {
         `${newPerson.name} (${newPerson.number}) is already added to phonebook`
       );
     } else {
-      setPersons((prevPersons) => [...prevPersons, newPerson]);
+      PersonsService.create(newPerson).then((addedPerson) => {
+        setPersons((prevPersons) => [...prevPersons, addedPerson]);
+      });
     }
   };
 
@@ -38,7 +38,6 @@ const App = () => {
     setNewPerson((prevNewPerson) => ({
       ...prevNewPerson,
       [name]: value,
-      id: persons.length + 1,
     }));
   };
 
