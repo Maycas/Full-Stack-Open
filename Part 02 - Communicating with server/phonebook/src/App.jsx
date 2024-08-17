@@ -8,11 +8,16 @@ import PersonsForm from './components/PersonsForm';
 
 const App = () => {
   const [persons, setPersons] = useState([]);
-  const [newPerson, setNewPerson] = useState({ name: '', number: '' });
+  const [newPerson, setNewPerson] = useState({
+    name: '',
+    number: '',
+  });
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
-    PersonsService.getAll().then((personsList) => setPersons(personsList));
+    PersonsService.getAll()
+      .then((personsList) => setPersons(personsList))
+      .catch((error) => console.log(`Couldn't get the phonebook data`, error));
   }, []);
 
   const addNewPerson = (event) => {
@@ -27,9 +32,11 @@ const App = () => {
         `${newPerson.name} (${newPerson.number}) is already added to phonebook`
       );
     } else {
-      PersonsService.create(newPerson).then((addedPerson) => {
-        setPersons((prevPersons) => [...prevPersons, addedPerson]);
-      });
+      PersonsService.create(newPerson)
+        .then((addedPerson) => {
+          setPersons((prevPersons) => [...prevPersons, addedPerson]);
+        })
+        .catch((error) => console.log('Error creating new entry', error));
     }
   };
 
@@ -44,10 +51,12 @@ const App = () => {
   const handleSearchChange = (event) => setSearchQuery(event.target.value);
 
   const deletePerson = (id) => {
-    PersonsService.remove(id).then(() => {
-      const updatedPersons = persons.filter((person) => person.id !== id);
-      setPersons(updatedPersons);
-    });
+    PersonsService.remove(id)
+      .then(() => {
+        const updatedPersons = persons.filter((person) => person.id !== id);
+        setPersons(updatedPersons);
+      })
+      .catch((error) => console.log('Error removing an entry', error));
   };
 
   const filteredPersons = persons.filter((person) =>
