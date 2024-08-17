@@ -43,6 +43,13 @@ const App = () => {
 
   const handleSearchChange = (event) => setSearchQuery(event.target.value);
 
+  const deletePerson = (id) => {
+    PersonsService.remove(id).then(() => {
+      const updatedPersons = persons.filter((person) => person.id !== id);
+      setPersons(updatedPersons);
+    });
+  };
+
   const filteredPersons = persons.filter((person) =>
     person.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -54,7 +61,7 @@ const App = () => {
       <h2>Add New Entry</h2>
       <PersonsForm onInputChange={handleInputChange} onSubmit={addNewPerson} />
       <h2>Numbers</h2>
-      <Persons persons={filteredPersons} />
+      <Persons persons={filteredPersons} onDelete={deletePerson} />
     </div>
   );
 };
