@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import _ from 'lodash';
 import PersonsService from './services/persons';
 
 import Persons from './components/Persons';
@@ -23,14 +22,25 @@ const App = () => {
   const addNewPerson = (event) => {
     event.preventDefault();
 
-    const personExists = persons.some((person) =>
-      _.isEqual(_.omit(person, ['id']), _.omit(newPerson, ['id']))
+    const personExists = persons.find(
+      (person) => person.name === newPerson.name
     );
 
     if (personExists) {
-      alert(
-        `${newPerson.name} (${newPerson.number}) is already added to phonebook`
+      const updateConfirmation = confirm(
+        `${newPerson.name} is already added to phonebook, replace the old number with a new one?`
       );
+
+      if (updateConfirmation) {
+        PersonsService.update(personExists.id, newPerson).then(
+          (updatedPerson) => {
+            const updatedPersonsList = persons.map((person) =>
+              person.id === updatedPerson.id ? updatedPerson : person
+            );
+            setPersons(updatedPersonsList);
+          }
+        );
+      }
     } else {
       PersonsService.create(newPerson)
         .then((addedPerson) => {
