@@ -1,0 +1,15 @@
+.basic {
+  margin: 10px 0;
+  border: 5px solid green;
+  background: lightgray;
+  padding: 10px;
+  color: green;
+  font-size: 20px 
+}
+
+.error {
+  border-color: red;
+  color: red;
+}
+
+
