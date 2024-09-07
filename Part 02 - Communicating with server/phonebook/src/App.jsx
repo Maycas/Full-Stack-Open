@@ -18,17 +18,33 @@ const App = () => {
   useEffect(() => {
     PersonsService.getAll()
       .then((personsList) => setPersons(personsList))
-      .catch((error) => console.log(`Couldn't get the phonebook data`, error));
+      .catch(() => notify(`Couldn't get the phonebook data`, true));
   }, []);
-
-  const findExistingPerson = (personName) =>
-    persons.find((person) => person.name === personName);
 
   const notify = (message, isError) => {
     setNotification({ message, isError });
     setTimeout(() => {
       setNotification(null);
     }, 5000);
+  };
+
+  const findPersonById = (id) => persons.find((person) => person.id === id);
+
+  const findPersonByName = (name) =>
+    persons.find((person) => person.name === name);
+
+  const updatePersonsList = (updatedPerson) => {
+    setPersons((prevPersons) =>
+      prevPersons.map((person) =>
+        person.id === updatedPerson.id ? updatedPerson : person
+      )
+    );
+  };
+
+  const removeFromPersonsList = (personToRemove) => {
+    setPersons((prevPersons) =>
+      prevPersons.filter((person) => person.id !== personToRemove.id)
+    );
   };
 
   const createPerson = (person) => {
@@ -48,18 +64,11 @@ const App = () => {
     if (updateConfirmation) {
       PersonsService.update(existingPerson.id, newPerson)
         .then((updatedPerson) => {
-          const updatedPersonsList = persons.map((person) =>
-            person.id === updatedPerson.id ? updatedPerson : person
-          );
-          setPersons(updatedPersonsList);
+          updatePersonsList(updatedPerson);
           notify(`${existingPerson.name} phone number has been updated`, false);
         })
         .catch(() => {
-          const updatedPersonsList = persons.filter(
-            (person) => person.id !== existingPerson.id
-          );
-          setPersons(updatedPersonsList);
-
+          removeFromPersonsList(existingPerson);
           notify(
             `Information from ${existingPerson.name} has already been removed from the server`,
             true
@@ -71,7 +80,7 @@ const App = () => {
   const handleAddNewPerson = (event) => {
     event.preventDefault();
 
-    const existingPerson = findExistingPerson(newPerson.name);
+    const existingPerson = findPersonByName(newPerson.name);
 
     if (existingPerson) {
       updatePerson(existingPerson);
@@ -91,17 +100,15 @@ const App = () => {
   const handleSearchChange = (event) => setSearchQuery(event.target.value);
 
   const handleDeletePerson = (id) => {
-    const personToDelete = persons.find((person) => person.id === id);
+    const personToDelete = findPersonById(id);
 
     PersonsService.remove(id)
       .then(() => {
-        const updatedPersons = persons.filter((person) => person.id !== id);
-        setPersons(updatedPersons);
+        removeFromPersonsList(personToDelete);
         notify(`${personToDelete.name} has been removed`, false);
       })
       .catch(() => {
-        const updatedPersons = persons.filter((person) => person.id !== id);
-        setPersons(updatedPersons);
+        removeFromPersonsList(personToDelete);
         notify(
           `${personToDelete.name} was already removed from the server`,
           true
