@@ -24,7 +24,7 @@ function App() {
 
   return (
     <>
-      <FilterInput onSearch={handleSearchChange} />
+      <FilterInput onSearch={handleSearchChange} value={searchQuery} />
       {filteredCountryList.length === 1 ? (
         <CountryInfo country={filteredCountryList[0]} />
       ) : (
