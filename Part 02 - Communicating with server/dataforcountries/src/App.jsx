@@ -4,6 +4,7 @@ import CountriesService from './services/countries';
 import FilterInput from './components/FilterInput';
 import CountryList from './components/CountryList';
 import CountryInfo from './components/CountryInfo';
+import filterCountries from './utils/filterCountries';
 
 function App() {
   const [countries, setCountries] = useState([]);
@@ -15,15 +16,7 @@ function App() {
 
   const handleSearchChange = (event) => setSearchQuery(event.target.value);
 
-  const exactMatch = countries.find(
-    (country) => country.name.common.toLowerCase() === searchQuery.toLowerCase()
-  );
-
-  const filteredCountryList = exactMatch
-    ? [exactMatch]
-    : countries.filter((country) =>
-        country.name.common.toLowerCase().includes(searchQuery.toLowerCase())
-      );
+  const filteredCountryList = filterCountries(countries, searchQuery);
 
   return (
     <>
