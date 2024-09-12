@@ -16,6 +16,10 @@ function App() {
 
   const handleSearchChange = (event) => setSearchQuery(event.target.value);
 
+  const handleSelectCountry = (countryName) => {
+    setSearchQuery(countryName);
+  };
+
   const filteredCountryList = filterCountries(countries, searchQuery);
 
   return (
@@ -24,7 +28,10 @@ function App() {
       {filteredCountryList.length === 1 ? (
         <CountryInfo country={filteredCountryList[0]} />
       ) : (
-        <CountryList countries={filteredCountryList} />
+        <CountryList
+          countries={filteredCountryList}
+          onSelectedCountry={handleSelectCountry}
+        />
       )}
     </>
   );
