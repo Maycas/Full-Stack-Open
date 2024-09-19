@@ -59,14 +59,23 @@ app.delete('/api/persons/:id', (req, res) => {
 });
 
 app.post('/api/persons', (req, res) => {
-  const id = getRandomInt(maxId);
   const { name, number } = req.body;
 
+  if (!name) return res.status(400).json({ error: 'name is missing' });
+  if (!number) return res.status(400).json({ error: 'number is missing' });
+
+  const nameExists = persons.some((person) => person.name === name);
+  if (nameExists)
+    return res
+      .status(400)
+      .json({ error: 'name already exists in the phonebook' });
+
+  const id = getRandomInt(maxId);
   const newPerson = { id, name, number };
 
   persons.push(newPerson);
 
-  res.json(newPerson);
+  res.status(201).json(newPerson);
 });
 
 app.listen(port, () => {
