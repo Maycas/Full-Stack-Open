@@ -1,7 +1,12 @@
 import express from 'express';
 
+import getRandomInt from './utils/getRandomInt.js';
+
 const app = express();
 const port = process.env.port || 3001;
+const maxId = 100000;
+
+app.use(express.json());
 
 let persons = [
   {
@@ -25,7 +30,6 @@ let persons = [
     number: '39-23-6423122',
   },
 ];
-
 
 app.get('/info', (req, res) => {
   const date = new Date();
@@ -52,6 +56,17 @@ app.delete('/api/persons/:id', (req, res) => {
   const id = req.params.id;
   persons = persons.filter((person) => person.id !== id);
   res.status(204).end();
+});
+
+app.post('/api/persons', (req, res) => {
+  const id = getRandomInt(maxId);
+  const { name, number } = req.body;
+
+  const newPerson = { id, name, number };
+
+  persons.push(newPerson);
+
+  res.json(newPerson);
 });
 
 app.listen(port, () => {
