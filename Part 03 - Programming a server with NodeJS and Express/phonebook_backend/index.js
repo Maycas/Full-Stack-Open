@@ -1,10 +1,14 @@
 import express from 'express';
+import morgan from 'morgan';
 
 import getRandomInt from './utils/getRandomInt.js';
 
 const app = express();
 const port = process.env.port || 3001;
 const maxId = 100000;
+
+morgan.token('body', (req) => JSON.stringify(req.body));
+app.use(morgan(':method :url :status :response-time ms - :body'));
 
 app.use(express.json());
 
